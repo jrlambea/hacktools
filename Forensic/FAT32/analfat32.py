@@ -197,14 +197,6 @@ def main():
 				sBS_FilSysType += b
 			print( "\tBS_FilSysType:\t" + BS_FilSysType[:-1] + " (\"" + sBS_FilSysType + "\")")
 
-
-			"""
-			while byte != "":
-				
-				# Do stuff with byte.
-				byte = f.read(1)
-			"""
-
 		finally:
 			f.close()
 
