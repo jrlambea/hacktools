@@ -23,7 +23,7 @@ Apply patches as binary.
 .DESCRIPTION
 This is a template.
 
-.PARAMETER File 
+.PARAMETER File
 File to patch.
 
 .PARAMETER Offset
@@ -37,12 +37,12 @@ Write a JMP (Hex) in a example.exe file at address 0x452EF3.
 
 Patch-Bin.ps1 -File example.exe -Offset 0x452EF3 -Bytes_to_Write 0xEB
 
-.EXAMPLE 
+.EXAMPLE
 Write a "A" char in a example.txt file at address byte number 10.
 
 Patch-Bin.ps1 -File example.txt -Offset 10d -Bytes_to_Write 65d
 
-.EXAMPLE 
+.EXAMPLE
 Patch all files from pipe writing two NOPs.
 
 Get-ChildItem *.exe | Patch-Bin.ps1 -Offset 0x45EA67 -Bytes_to_Write 0x9090
@@ -64,7 +64,7 @@ Param(
 
     [parameter( Mandatory = $true )]
     [alias( "b" )]
-    [string]$Bytes_to_Write
+    [string[]]$Bytes_to_Write
 )
 
 Function parse( [String]$value )
@@ -83,8 +83,67 @@ Function parse( [String]$value )
     Return $result_value
 }
 
-if ( !( $Offset = parse($Offset) ) -Or !( $Bytes_to_Write = parse($Bytes_to_Write) ) )
+Function parseArray( [String[]]$value )
 {
-    "Error value format mismatch."
-    Exit 3
+
+    $result_value = @()
+    $result = $true
+
+    $value | % {
+        
+        if ( !( parse($_) ) -Or ( (parse($_)) -gt 255 ) )
+        {
+            $result = $false
+
+        } else {
+            $result_value += parse($_)
+
+        }
+
+    }
+
+    if ( !($result) ) { Return $false } else { Return $result_value }
+
 }
+
+if ( !( parse($Offset) ) -Or !( parseArray($Bytes_to_Write) ) )
+{
+    "[e] Error value format mismatch."; Exit 3
+}
+
+$Offset = parse($Offset)
+$Bytes_to_Write = parseArray($Bytes_to_Write)
+
+If ( !( Test-Path "$File" ) )
+{
+    "[e] Error file doesn't exist."; Exit 4
+
+} else {
+    $File = ( Get-ChildItem $File ).FullName
+
+}
+
+$Min_len = [Int]$Offset + $Bytes_to_Write.Length
+
+If ( ( Get-ChildItem $File ).Length -lt $Min_len )
+{
+    "[e] Error Params: Out of Range"; Exit 5
+}
+
+"[i] Opening $File for edit."
+[System.IO.BinaryWriter]$br = [System.IO.File]::Open( $File, 3 )
+
+"[i] Seeking offset " + $Offset
+if ( $br.BaseStream.seek( $Offset,0 ) )
+{
+    $Bytes_to_Write | % {
+        "[i] Writing byte " + $_
+        $br.BaseStream.WriteByte( $_ )
+    }
+
+}
+
+"[i] Patch success. Closing file."
+$br.Close()
+
+Exit 0
