@@ -27,10 +27,10 @@ This is a template.
 File to patch.
 
 .PARAMETER Offset
-The byte address to start write data, the format of this Offset could be decimal (3735928559d), hexadecimal (0xdeadbeef) or binary (11011110101011011011111011101111b).
+The byte address to start write data, the format of this Offset can be decimal (3735928559d), hexadecimal (0xdeadbeef) or binary (11011110101011011011111011101111b).
 
 .PARAMETER Bytes_to_Write
-The data to write, the format could be as array of bytes value in decimal (235d), hexadecimal (0xEB) or binary (11101011b).
+The data to write, the format can be an array of bytes value in decimal (235d), hexadecimal (0xEB) or binary (11101011b).
 
 .EXAMPLE
 Write a JMP (Hex) in a example.exe file at address 0x452EF3.
