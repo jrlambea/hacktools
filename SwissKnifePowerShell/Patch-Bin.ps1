@@ -43,7 +43,7 @@ Patch-Bin.ps1 -File example.txt -Offset 10d -Bytes_to_Write 65d
 Write a "A" char in a example.txt file at address byte number 10.
 
 .EXAMPLE
-Get-ChildItem *.exe | Patch-Bin.ps1 -Offset 0x45EA67 -Bytes_to_Write 0x9090
+Get-ChildItem *.exe | Patch-Bin.ps1 -Offset 0x45EA67 -Bytes_to_Write 0x90,0x90
 
 Patch all files from pipe writing two NOPs.
 
