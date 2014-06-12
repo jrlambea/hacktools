@@ -33,24 +33,24 @@ The byte address to start write data, the format of this Offset could be decimal
 The data to write, the format could be as array of bytes value in decimal (235d), hexadecimal (0xEB) or binary (11101011b).
 
 .EXAMPLE
-Write a JMP (Hex) in a example.exe file at address 0x452EF3.
-
 Patch-Bin.ps1 -File example.exe -Offset 0x452EF3 -Bytes_to_Write 0xEB
 
-.EXAMPLE
-Write a "A" char in a example.txt file at address byte number 10.
+Write a JMP (Hex) in a example.exe file at address 0x452EF3.
 
+.EXAMPLE
 Patch-Bin.ps1 -File example.txt -Offset 10d -Bytes_to_Write 65d
 
-.EXAMPLE
-Patch all files from pipe writing two NOPs.
+Write a "A" char in a example.txt file at address byte number 10.
 
+.EXAMPLE
 Get-ChildItem *.exe | Patch-Bin.ps1 -Offset 0x45EA67 -Bytes_to_Write 0x9090
 
-.EXAMPLE
-Using "ForPipeLine" to use multiple pipelines to patch the same file.
+Patch all files from pipe writing two NOPs.
 
+.EXAMPLE
 .\Patch-Bin.ps1 -File .\example.txt -Offset 0x1 -Bytes_to_Write 0x69 -ForPipeLine:$True | .\Patch-Bin.ps1 -Offset 0x9 -Bytes_to_Write 0x70
+
+Using "ForPipeLine" to use multiple pipelines to patch the same file.
 
 .NOTES
 
