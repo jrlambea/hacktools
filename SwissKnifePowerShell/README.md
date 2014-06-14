@@ -10,6 +10,7 @@ Análisis:
 * Análisis de redes.
 * Auditorías de seguridad.
 * Detección de hashes.
+  * [Get-Hash.ps1](https://github.com/spageek/hacktools/blob/master/SwissKnifePowerShell/Get-Hash.ps1): Port del Hash ID de Zion3R (blackploit.com), detector de tipos de hashes.
 
 Modificación:
 * Modificación de binarios.
