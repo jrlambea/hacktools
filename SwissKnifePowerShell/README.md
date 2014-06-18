@@ -8,6 +8,7 @@ Análisis:
 * Análisis de binarios.
 * Análisis de memoria.
 * Análisis de redes.
+  * [Get-IPGeoLocation.ps1](https://github.com/spageek/hacktools/blob/master/SwissKnifePowerShell/Get-IPGeoLocation.ps1): Cliente de la API RESTful de http://db-ip.com, resuelve la ubicación física de una IP pública.
 * Auditorías de seguridad.
 * Detección de hashes.
   * [Get-Hash.ps1](https://github.com/spageek/hacktools/blob/master/SwissKnifePowerShell/Get-Hash.ps1): Port del Hash ID de Zion3R (blackploit.com), detector de tipos de hashes.
