@@ -34,41 +34,48 @@ Address                       Country                       StateProv           
 -------                       -------                       ---------                     ----
 193.146.141.234               ES                            Madrid                        Madrid
 
-Query the service. It will returns an custom object as you can see.
+Query the service. It will returns an custom object.
+
+.EXAMPLE
+Get-Content IP_List.txt | .\Get-IPGeoLocation.ps1
+
+Address                       Country                       StateProv                     City
+-------                       -------                       ---------                     ----
+8.8.8.8                       US                            California                    Mountain View
+8.8.4.4                       US                            California                    Mountain View
 
 .NOTES
 
 #>
 
+Param([string[]]$IP)
 
-[CmdletBinding()]
-
-Param(
-    [parameter( Mandatory = $true, Position = 0, valueFromPipeline = $true )]
-    [alias( "i" )]
-    [string]$IPv4
-)
+if ( $null -eq $IP ) { $IP = @($input) }
 
 $key = "--->> YOUR_KEY_HERE!! <<---"
 
-if ( ( [System.Net.IPAddress]::Parse($IPv4) ) )
+ForEach ($IPv4 in $IP)
 {
-    $r = [System.Net.WebRequest]::Create("http://api.db-ip.com/addrinfo?addr=$IPv4&api_key=$key")
-    $r.Method ="GET"
-    $r.ContentLength = 0
-    $res = $r.GetResponse()
-    $reader = new-object System.IO.StreamReader($res.GetResponseStream())
-    $resp = $reader.ReadToEnd()
-    
-    $loc = New-Object -TypeName Object
-    $loc | Add-Member -Type NoteProperty -Name Address -value $resp.Split("""")[3]
-    $loc | Add-Member -Type NoteProperty -Name Country -value $resp.Split("""")[7]
-    $loc | Add-Member -Type NoteProperty -Name StateProv -value $resp.Split("""")[11]
-    $loc | Add-Member -Type NoteProperty -Name City -value $resp.Split("""")[15]
-    
-    Return $loc
-    
-} else {
-    "The ip $ipv4 not seems a valid IPv4 address."
-    Return $False
+    if ( ( [System.Net.IPAddress]::Parse($IPv4) ) )
+    {
+        $r = [System.Net.WebRequest]::Create("http://api.db-ip.com/addrinfo?addr=$IPv4&api_key=$key")
+        $r.Method ="GET"
+        $r.ContentLength = 0
+        $res = $r.GetResponse()
+        $reader = new-object System.IO.StreamReader($res.GetResponseStream())
+        $resp = $reader.ReadToEnd()
+        
+        $loc = New-Object -TypeName Object
+        $loc | Add-Member -Type NoteProperty -Name Address -value $resp.Split("""")[3]
+        $loc | Add-Member -Type NoteProperty -Name Country -value $resp.Split("""")[7]
+        $loc | Add-Member -Type NoteProperty -Name StateProv -value $resp.Split("""")[11]
+        $loc | Add-Member -Type NoteProperty -Name City -value $resp.Split("""")[15]
+        $loc
+        
+        [Array]$Result += $loc
+        
+    } else {
+        "The ip $ipv4 not seems a valid IPv4 address."
+        Return $False
+    }
 }
